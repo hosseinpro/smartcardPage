@@ -8,6 +8,16 @@ class App extends Component {
       <div className="App">
         <div className="container">
           <h3 className="mt-4">SmartcardPage: Demo of smartcardBridge</h3>
+          <h6>
+            More info at
+            <a
+              href="https://github.com/hosseinpro/smartcardPage"
+              target="_blank"
+            >
+              {" "}
+              smartcardPage at github
+            </a>
+          </h6>
           <MainPage smartcardBridgeAddress="http://localhost:3333" />
         </div>
       </div>
