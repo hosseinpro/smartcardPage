@@ -13,6 +13,7 @@ class App extends Component {
             <a
               href="https://github.com/hosseinpro/smartcardPage"
               target="_blank"
+              rel="noopener noreferrer"
             >
               {" "}
               smartcardPage at github

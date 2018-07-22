@@ -141,9 +141,8 @@ class MainPage extends Component {
               hidden={this.state.isSmartcardBridgeAvailable ? true : false}
             >
               <label className="text-danger form-control">
-                smartcardBridge is not connected.{" "}
                 {this.state.osName === "Windows"
-                  ? "You must download and install smartcardBridge at first."
+                  ? "You must download and install smartcardBridge at first. You may receive security alert because smartcardBridge is not digitally signed."
                   : "Your operating system (" +
                     this.state.osName +
                     ") is not supported."}
