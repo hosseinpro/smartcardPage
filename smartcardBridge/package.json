@@ -1,7 +1,7 @@
 {
   "name": "smartcardbridge",
   "version": "1.0.0",
-  "description": "A smart card bridge for java script code to transmit smart card commands (APDU) via local operating system's PCSC functions",
+  "description": "A smart card bridge for java script code to transmit smart card commands (APDU) via local operating system's PC/SC functions",
   "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,7 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
-  "author": "hosseinpro.com",
+  "author": "hosseinpro",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.4",
