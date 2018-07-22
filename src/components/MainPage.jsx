@@ -28,7 +28,7 @@ class MainPage extends Component {
   };
 
   componentDidMount() {
-    this.state.osName = this.getOSName();
+    this.setState({ osName: this.getOSName() });
     getVersion(this.state.smartcardBridgeAddress)
       .then(res => {
         this.setState({ isSmartcardBridgeAvailable: true });
