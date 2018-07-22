@@ -167,6 +167,7 @@ class MainPage extends Component {
           <div className="row mt-2 input-group">
             <select
               className="custom-select"
+              disabled={!this.state.isSmartcardBridgeAvailable ? true : false}
               onChange={this.onChangeCardreaderList.bind(this)}
             >
               {this.state.cardreaderList.map(readername => {
@@ -176,6 +177,7 @@ class MainPage extends Component {
             <div className="input-group-append">
               <button
                 className="btn btn-primary"
+                disabled={!this.state.isSmartcardBridgeAvailable ? true : false}
                 onClick={this.onClickConnectDisconnect.bind(this)}
               >
                 {!this.state.isSmartcardConnected ? "Connect" : "Disconnect"}
