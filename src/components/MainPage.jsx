@@ -15,6 +15,7 @@ class MainPage extends Component {
   }
 
   state = {
+    osName: "",
     smartcardBridgeAddress: "",
     isSmartcardBridgeAvailable: false,
     cardreaderList: [],
@@ -27,6 +28,7 @@ class MainPage extends Component {
   };
 
   componentDidMount() {
+    this.state.osName = this.getOSName();
     getVersion(this.state.smartcardBridgeAddress)
       .then(res => {
         this.setState({ isSmartcardBridgeAvailable: true });
@@ -42,6 +44,15 @@ class MainPage extends Component {
       .catch(error => {
         this.setState({ isSmartcardBridgeAvailable: false });
       });
+  }
+
+  getOSName() {
+    let OSName = "";
+    if (navigator.appVersion.indexOf("Win") !== -1) OSName = "Windows";
+    if (navigator.appVersion.indexOf("Mac") !== -1) OSName = "MacOS";
+    if (navigator.appVersion.indexOf("Linux") !== -1) OSName = "Linux";
+    if (navigator.appVersion.indexOf("X11") !== -1) OSName = "UNIX";
+    return OSName;
   }
 
   onChangeCardreaderList(e) {
@@ -118,18 +129,40 @@ class MainPage extends Component {
     return (
       <div className="form-group">
         <div className="row col-xs-12">
-          <div className="row mt-2">
+          <div className="row mt-2 input-group">
             <label
-              className={
-                this.state.isSmartcardBridgeAvailable
-                  ? "text-auto"
-                  : "text-danger"
-              }
+              className="text-auto"
+              hidden={this.state.isSmartcardBridgeAvailable ? false : true}
             >
-              {this.state.isSmartcardBridgeAvailable
-                ? "smartcardBridge is connected"
-                : "smartcardBridge is not connected"}
+              smartcardBridge is connected.
             </label>
+            <div
+              className="input-group"
+              hidden={this.state.isSmartcardBridgeAvailable ? true : false}
+            >
+              <label className="text-danger form-control">
+                smartcardBridge is not connected.{" "}
+                {this.state.osName === "Windows"
+                  ? "You must download and install smartcardBridge at first."
+                  : "Your operating system (" +
+                    this.state.osName +
+                    ") is not supported."}
+              </label>
+              <div className="input-group-append">
+                <a
+                  hidden={this.state.osName !== "Windows" ? true : false}
+                  className="btn btn-danger"
+                  href={
+                    this.state.osName === "Windows"
+                      ? "https://github.com/hosseinpro/smartcardPage/raw/master/smartcardBridge/out/make/squirrel.windows/x64/smartcardbridge-1.0.0%20Setup.exe"
+                      : ""
+                  }
+                  role="button"
+                >
+                  Download
+                </a>
+              </div>
+            </div>
           </div>
           <div className="row mt-2 input-group">
             <select
