@@ -1,3 +1,4 @@
 node_modules/
 smartcardBridge/node_modules/
-smartcardBridge/out/
+smartcardBridge/out/*
+!smartcardBridge/out/make
