@@ -1,7 +1,8 @@
 # smartcardPage
 
 This is a tool to connect web pages to smart card via java script. This tool works with all ISO7816/14443 and NFC smart cards. smartcardPage is a demo page to demonstrate how to use smartcardBridge.
-You can send APDU command and receive APDU response to/from all ISO7816/14443 and NFC smart card with this utility.
+You can send APDU command and receive APDU response to/from all ISO7816/14443 and NFC smart card with this utility. It also supports [jCardSim](https://github.com/licel/jcardsim) as java card simulator with a simple REST server.
+You may use smartcardBridge to share smart card between different virtual machines (VM) and to share a smart card on a network.
 
 ## Online Demo
 

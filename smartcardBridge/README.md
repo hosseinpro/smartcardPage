@@ -1,6 +1,7 @@
 # smartcardBridge
 
-This is a tool which provides local operating system smartcard API (PC/SC) as HTTP services. smartcardBridge supports all PC/SC and CCID smartcard readers (almost all readers in the market).
+This is a tool which provides local operating system smartcard API (PC/SC) as HTTP services. smartcardBridge supports all PC/SC and CCID smartcard readers (almost all readers in the market). It also supports [jCardSim](https://github.com/licel/jcardsim) as java card simulator with a simple REST server.
+You may use smartcardBridge to share smart card between different virtual machines (VM) and to share a smart card on a network.
 
 ## Online Demo
 
@@ -62,4 +63,4 @@ Actually, smartcardBridge and smartcardPage are two separate independent project
 ```
 
 **Note**
-smartcardBridge uses Node Native Modules and must compile for each target platform (Windows, MacOS and Linux) at the same development platform. So, if you would like to make setup for Windows platform, you must compile smartcardBridge in Windows platform. You may need additional native development packages such as C++ Redistributable package for each platform.
+smartcardBridge uses Node Native Modules and must compile for each target platform (Windows, MacOS and Linux) at the same development platform. So, if you would like to make setup for Windows platform, you must compile smartcardBridge in Windows platform. You may need additional native development packages such as C++ Redistributable package for each platform, and Python.
