@@ -1,20 +1,17 @@
 import React, { Component } from "react";
 
-import {
-  getVersion,
-  listCardreaders,
-  cardreaderConnect,
-  cardreaderDisconnect,
-  cardreaderTransmit
-} from "../lib/smartcardBridgeClient";
+import SmartcardBridgeClient from "../lib/smartcardBridgeClient";
 
 class MainPage extends Component {
   constructor(props) {
     super();
-    this.state.smartcardBridgeAddress = props.smartcardBridgeAddress;
+    this.state.smartcardBridgeClient = new SmartcardBridgeClient(
+      props.smartcardBridgeAddress
+    );
   }
 
   state = {
+    smartcardBridgeClient: null,
     osName: "",
     smartcardBridgeAddress: "",
     isSmartcardBridgeAvailable: false,
@@ -28,11 +25,14 @@ class MainPage extends Component {
   };
 
   componentDidMount() {
+    window.addEventListener("beforeunload", this.componentCleanup.bind(this));
     this.setState({ osName: this.getOSName() });
-    getVersion(this.state.smartcardBridgeAddress)
+    this.state.smartcardBridgeClient
+      .getVersion()
       .then(res => {
         this.setState({ isSmartcardBridgeAvailable: true });
-        listCardreaders(this.state.smartcardBridgeAddress)
+        this.state.smartcardBridgeClient
+          .listCardreaders()
           .then(cardreaderList => {
             const selectedCardreader = cardreaderList[0];
             this.setState({ cardreaderList, selectedCardreader });
@@ -42,8 +42,28 @@ class MainPage extends Component {
           });
       })
       .catch(error => {
+        console.log(error);
         this.setState({ isSmartcardBridgeAvailable: false });
       });
+  }
+
+  componentCleanup() {
+    this.state.smartcardBridgeClient
+      .cardreaderDisconnect(this.state.selectedCardreader)
+      .then(res => {
+        this.setState({
+          isSmartcardConnected: false,
+          errorMessage: null
+        });
+      })
+      .catch(error => {
+        this.setState({ errorMessage: error });
+      });
+  }
+
+  componentWillUnmount() {
+    this.componentCleanup();
+    window.removeEventListener("beforeunload", this.componentCleanup);
   }
 
   getOSName() {
@@ -56,16 +76,19 @@ class MainPage extends Component {
   }
 
   onChangeCardreaderList(e) {
-    this.cardreaderDisconnect();
-    this.setState({ selectedCardreader: e.target.value });
+    this.state.smartcardBridgeClient.cardreaderDisconnect(
+      this.state.selectedCardreader
+    );
+    this.setState({
+      selectedCardreader: e.target.value,
+      isSmartcardConnected: false
+    });
   }
 
   onClickConnectDisconnect() {
     if (this.state.isSmartcardConnected) {
-      cardreaderDisconnect(
-        this.state.smartcardBridgeAddress,
-        this.state.selectedCardreader
-      )
+      this.state.smartcardBridgeClient
+        .cardreaderDisconnect(this.state.selectedCardreader)
         .then(res => {
           this.setState({
             isSmartcardConnected: false,
@@ -76,10 +99,8 @@ class MainPage extends Component {
           this.setState({ errorMessage: error });
         });
     } else {
-      cardreaderConnect(
-        this.state.smartcardBridgeAddress,
-        this.state.selectedCardreader
-      )
+      this.state.smartcardBridgeClient
+        .cardreaderConnect(this.state.selectedCardreader)
         .then(res => {
           this.setState({
             isSmartcardConnected: true,
@@ -93,32 +114,69 @@ class MainPage extends Component {
     }
   }
 
-  onChangeCommandAPDU(e) {
-    this.setState({ commandAPDU: e.target.value });
+  getTime() {
+    const now = new Date();
+    let hour = "" + now.getHours();
+    if (hour.length === 1) {
+      hour = "0" + hour;
+    }
+    let minute = "" + now.getMinutes();
+    if (minute.length === 1) {
+      minute = "0" + minute;
+    }
+    let second = "" + now.getSeconds();
+    if (second.length === 1) {
+      second = "0" + second;
+    }
+    let millisecond = "" + now.getMilliseconds();
+    if (millisecond.length === 1) {
+      millisecond = "00" + millisecond;
+    }
+    if (millisecond.length === 2) {
+      millisecond = "0" + millisecond;
+    }
+    return hour + ":" + minute + ":" + second + "." + millisecond;
+  }
+
+  cardreaderTransmit(commandAPDU) {
+    commandAPDU = commandAPDU.toUpperCase();
+    return new Promise((resolve, reject) => {
+      const timeCommand = this.getTime();
+      const responseAPDULog =
+        this.state.responseAPDULog + timeCommand + " >> " + commandAPDU + "\n";
+      this.setState({
+        responseAPDULog
+      });
+      this.outputResponseAPDULog.scrollTop = this.outputResponseAPDULog.scrollHeight;
+      this.state.smartcardBridgeClient
+        .cardreaderTransmit(
+          this.state.selectedCardreader,
+          this.state.protocol,
+          commandAPDU
+        )
+        .then(responseAPDU => {
+          const timeResponse = this.getTime();
+          const responseAPDULog =
+            this.state.responseAPDULog +
+            timeResponse +
+            " << " +
+            responseAPDU +
+            "\n";
+          this.setState({
+            responseAPDULog
+          });
+          this.outputResponseAPDULog.scrollTop = this.outputResponseAPDULog.scrollHeight;
+          resolve(responseAPDU);
+        })
+        .catch(error => {
+          this.setState({ errorMessage: error });
+          reject(error);
+        });
+    });
   }
 
   onClickTransmit(e) {
-    cardreaderTransmit(
-      this.state.smartcardBridgeAddress,
-      this.state.selectedCardreader,
-      this.state.protocol,
-      this.state.commandAPDU
-    )
-      .then(res => {
-        const responseAPDULog =
-          this.state.responseAPDULog +
-          ">" +
-          this.state.commandAPDU +
-          "\n<" +
-          res.data.responseAPDU +
-          "\n";
-        this.setState({
-          responseAPDULog
-        });
-      })
-      .catch(error => {
-        this.setState({ errorMessage: error });
-      });
+    this.cardreaderTransmit(this.inputCommandAPDU.value);
   }
 
   onClickClear(e) {
@@ -187,8 +245,9 @@ class MainPage extends Component {
             <input
               type="text"
               className="form-control"
-              onChange={this.onChangeCommandAPDU.bind(this)}
+              ref={el => (this.inputCommandAPDU = el)}
               disabled={!this.state.isSmartcardConnected}
+              placeholder="APDU"
             />
             <div className="input-group-append">
               <button
@@ -205,10 +264,11 @@ class MainPage extends Component {
           </div>
           <div className="row mt-2 input-group">
             <textarea
-              className="form-control"
+              className="form-control text-monospace"
               rows="10"
               readOnly
               value={this.state.responseAPDULog}
+              ref={el => (this.outputResponseAPDULog = el)}
             />
             <div className="w-100" />
             <button

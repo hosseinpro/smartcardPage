@@ -37,16 +37,39 @@ const cors = require('cors');
 expressApp.use(cors());
 const pcsclite = require('pcsclite');
 const pcsc = pcsclite();
+const request = require('request');
+
+const jcardsim = "jcardsim";
 
 expressApp.get('/', (req, res) => {
     res.send(JSON.stringify({name: app.getName(), version: app.getVersion()}));
 });
 
 expressApp.post('/api/listreaders', (req, res) => {
-   res.send(pcsc.readers);
+    const cardreaderList = [];
+    for(let i=0 ; i<Object.keys(pcsc.readers).length ; i++)
+    {
+        cardreaderList[i] = Object.keys(pcsc.readers)[i];
+    }
+    cardreaderList[cardreaderList.length] = jcardsim;
+    res.send(JSON.stringify({cardreaderList: cardreaderList}));
 });
 
 expressApp.post('/api/connect', (req, res) => {
+    if(req.body.name === jcardsim){
+        request.post({
+            headers: {'content-type' : 'application/x-www-form-urlencoded'},
+            url: 'http://localhost:4444/jcardsim', 
+            body: 'connect'}, (error, response, body) => {
+                if(error){
+                    res.send(JSON.stringify({result: 'Error', message: error.message}));
+                } else {
+                    res.send(JSON.stringify({result: 'Connected', protocol: ''}));
+                }
+              });
+        return;
+    }
+
     const reader = pcsc.readers[req.body.name];
     if(!reader) {
         res.send(JSON.stringify({result: 'Error', message: 'Reader not found'}));
@@ -66,6 +89,20 @@ expressApp.post('/api/connect', (req, res) => {
 });
 
 expressApp.post('/api/disconnect', (req, res) => {
+    if(req.body.name === jcardsim){
+        request.post({
+            headers: {'content-type' : 'application/x-www-form-urlencoded'},
+            url: 'http://localhost:4444/jcardsim', 
+            body: 'disconnect'}, (error, response, body) => {
+                if(error){
+                    res.send(JSON.stringify({result: 'Error', message: error.message}));
+                } else {
+                    res.send(JSON.stringify({result: 'Disonnected', protocol: ''}));
+                }
+              });
+        return;
+    }
+
     const reader = pcsc.readers[req.body.name];
     if(!reader) {
         res.send(JSON.stringify({result: 'Error', message: 'Reader not found'}));
@@ -85,6 +122,21 @@ expressApp.post('/api/disconnect', (req, res) => {
 });
 
 expressApp.post('/api/transmit', (req, res) => {
+    if(req.body.name === jcardsim){
+        const cmd = req.body.commandAPDU.replace(/\s/g, '')
+        request.post({
+            headers: {'content-type' : 'application/x-www-form-urlencoded'},
+            url: 'http://localhost:4444/jcardsim', 
+            body: cmd}, (error, response, body) => {
+                if(error){
+                    res.send(JSON.stringify({result: 'Error', message: error.message}));
+                } else {
+                    res.send(JSON.stringify({result: 'Transmitted', responseAPDU: body}));
+                }
+              });
+        return;
+    }
+    
     const reader = pcsc.readers[req.body.name];
     if(!reader) {
         res.send(JSON.stringify({result: 'Error', message: 'Reader not found'}));
