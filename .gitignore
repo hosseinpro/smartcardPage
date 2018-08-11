@@ -1,4 +1,5 @@
 node_modules/
 smartcardBridge/node_modules/
-smartcardBridge/out/*
-!smartcardBridge/out/make
+smartcardBridge/node_modules_win/
+smartcardBridge/node_modules_mac/
+smartcardBridge/out/
