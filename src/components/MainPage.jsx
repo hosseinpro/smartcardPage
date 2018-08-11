@@ -199,7 +199,8 @@ class MainPage extends Component {
               hidden={this.state.isSmartcardBridgeAvailable ? true : false}
             >
               <label className="text-danger form-control">
-                {this.state.osName === "Windows"
+                {this.state.osName === "Windows" ||
+                this.state.osName === "MacOS"
                   ? "You must download and install smartcardBridge at first. You may receive security alert because smartcardBridge is not digitally signed."
                   : "Your operating system (" +
                     this.state.osName +
@@ -207,12 +208,19 @@ class MainPage extends Component {
               </label>
               <div className="input-group-append">
                 <a
-                  hidden={this.state.osName !== "Windows" ? true : false}
+                  hidden={
+                    this.state.osName !== "Windows" &&
+                    this.state.osName !== "MacOS"
+                      ? true
+                      : false
+                  }
                   className="btn btn-danger"
                   href={
                     this.state.osName === "Windows"
-                      ? "https://github.com/hosseinpro/smartcardPage/raw/master/smartcardBridge/out/make/squirrel.windows/x64/smartcardbridge-1.0.0%20Setup.exe"
-                      : ""
+                      ? "https://github.com/hosseinpro/smartcardPage/releases/download/v1.1.0/smartcardbridge-1.1.0.Setup.exe"
+                      : this.state.osName === "MacOS"
+                        ? "https://github.com/hosseinpro/smartcardPage/releases/download/v1.1.0/smartcardbridge-darwin-x64-1.1.0.zip"
+                        : ""
                   }
                   role="button"
                 >

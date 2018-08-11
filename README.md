@@ -10,11 +10,7 @@ You can see the online demo version of smartcardPage and smartcardBridge at: htt
 
 ## Download Binary
 
-You may download smartcardBridge setup file here:
-
-- [x] Windows (x64) [smartcardbridge-1.0.0 Setup.exe](https://github.com/hosseinpro/smartcardPage/raw/master/smartcardBridge/out/make/squirrel.windows/x64/smartcardbridge-1.0.0%20Setup.exe)
-- [ ] Windows (x86)
-- [ ] MacOS
+You may download smartcardBridge setup file for Windows and MacOS [here](https://github.com/hosseinpro/smartcardPage/releases)
 
 ## Description
 

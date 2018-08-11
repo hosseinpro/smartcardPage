@@ -9,18 +9,14 @@ You can see online demo version of smartcardPage and smartcardBridge at: https:/
 
 ## Download Binary
 
-You may download smartcardBridge setup file here:
-
-- [x] Windows (x64) [smartcardbridge-1.0.0 Setup.exe](https://github.com/hosseinpro/smartcardPage/raw/master/smartcardBridge/out/make/squirrel.windows/x64/smartcardbridge-1.0.0%20Setup.exe)
-- [ ] Windows (x86)
-- [ ] MacOS
+You may download smartcardBridge setup file for Windows and MacOS [here](https://github.com/hosseinpro/smartcardPage/releases)
 
 **Note**
 When you install smartcardBridge setup, it starts automatically in the operating system's restart.
 
 ## Description
 
-smartcardBridge is a desktop application and implemented in [Node](https://nodejs.org/) and [Electron](https://electronjs.org/). It is released as a standalone setup file for Windows using [Electron Forge](https://github.com/electron-userland/electron-forge). smartcardBridge supports Windows (x86/x64), MacOS and Linux potentially, but I just compiled that for Windows and will compile for MacOS too.
+smartcardBridge is a desktop application and implemented in [Node](https://nodejs.org/) and [Electron](https://electronjs.org/). It is released as a standalone setup file for Windows using [Electron Forge](https://github.com/electron-userland/electron-forge). smartcardBridge supports Windows (x86/x64), MacOS and Linux potentially, but I just compiled that for Windows and MacOS.
 
 smartcardBridge uses [Express](https://expressjs.com/) to provide HTTP services to web pages. It utilizes [node-pcsclite](https://github.com/santigimeno/node-pcsclite) to connects to operating system's PC/SC API.
 
