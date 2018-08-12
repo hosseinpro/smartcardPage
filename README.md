@@ -50,4 +50,4 @@ To compile smartcardPage, you must install NPM or another package manager, and r
 
 ## Change of address
 
-smartcardBridge serves at http://localhost:3333 by default. If you change that, you can update the service address for smartcardPage at /src/App.js in 'smartcardBridgeAddress' properties of MainPage component.
+smartcardBridge serves at http://localhost:3333 by default. If you want to change that, you can update the service address for smartcardPage at /src/App.js in 'smartcardBridgeAddress' properties of MainPage component.
