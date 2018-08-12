@@ -1,4 +1,4 @@
-package jcardsimsample;
+package testappletpackage;
 
 import javacard.framework.*;
 

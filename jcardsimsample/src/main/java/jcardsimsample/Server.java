@@ -4,6 +4,8 @@ import com.licel.jcardsim.smartcardio.CardSimulator;
 import com.licel.jcardsim.utils.AIDUtil;
 import javacard.framework.AID;
 
+import testappletpackage.*;
+
 import javax.smartcardio.*;
 import com.sun.net.httpserver.*;
 import java.io.*;
