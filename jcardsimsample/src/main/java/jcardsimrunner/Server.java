@@ -1,4 +1,4 @@
-package jcardsimsample;
+package jcardsimrunner;
 
 import com.licel.jcardsim.smartcardio.CardSimulator;
 import com.licel.jcardsim.utils.AIDUtil;

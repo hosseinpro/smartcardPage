@@ -21,7 +21,7 @@ dependencies {
     // This dependency is found on compile classpath of this component and consumers.
     compile 'com.google.guava:guava:23.0'
 
-    compile files('lib/jcardsim-3.0.5-SNAPSHOT.jar')
+    compile fileTree(dir: 'lib', include: ['*.jar'])
 }
 
 // In this section you declare where to find the dependencies of your project
