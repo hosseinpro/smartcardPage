@@ -14,8 +14,13 @@ import java.net.*;
 public class Server {
 
     public static CardSimulator simulator = null;
+    public static AID appletAID = null;
 
     public static void main(String[] args) {
+
+        simulator = new CardSimulator();
+        AID appletAID = AIDUtil.create(testapplet.AID);
+        simulator.installApplet(appletAID, testapplet.class);
 
         HttpServer server = null;
         try {
@@ -47,20 +52,15 @@ public class Server {
             String response = "";
 
             if (cmd.equals("connect")) {
-                simulator = new CardSimulator();
-                AID appletAID = AIDUtil.create(testapplet.AID);
-                simulator.installApplet(appletAID, testapplet.class);
                 simulator.selectApplet(appletAID);
             } else if (cmd.equals("disconnect")) {
-                simulator = null;
+                simulator.reset();
             } else {
-                if (simulator != null) {
-                    CommandAPDU commandAPDU = new CommandAPDU(hex2bytes(cmd));
-                    ResponseAPDU responseAPDU = simulator.transmitCommand(commandAPDU);
-                    System.out.println(">> " + cmd);
-                    System.out.println("<< " + responseAPDU.toString());
-                    response = bytes2Hex(responseAPDU.getBytes());
-                }
+                CommandAPDU commandAPDU = new CommandAPDU(hex2bytes(cmd));
+                ResponseAPDU responseAPDU = simulator.transmitCommand(commandAPDU);
+                System.out.println(">> " + cmd);
+                System.out.println("<< " + responseAPDU.toString());
+                response = bytes2Hex(responseAPDU.getBytes());
             }
             he.sendResponseHeaders(200, response.length());
             OutputStream os = he.getResponseBody();
